@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Crypto</title>
+    <style type="text/css">
+        * {
+            font-family: 'Karla';
+        }
+        table {
+            border-spacing: 15px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Rank</th>
+                    <th>Price USD</th>
+                    <th>Price BTC</th>
+                    <th>24h volume USD</th>
+                    <th>Market cap USD</th>
+                    <th>Available Supply</th>
+                    <th>Total Supply</th>
+                    <th>Max Supply</th>
+                    <th>Percent change 1h</th>
+                    <th>Percent change 24h</th>
+                    <th>Percent change 7d</th>
+                    <th>Last updated</th>
+                </tr>
+            </thead>
+            <tr v-for="c in cr" :key="c.id">
+                <td v-for="k in c">
+                    {{ k }}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                cr: null,
+            },
+            methods: {
+                setData(data) {
+                    this.cr = data;
+                },
+                fetchData() {
+                    fetch('/data')
+                        .then(res => res.json())
+                        .then(data => this.setData(data))
+                }
+            },
+            mounted() {
+                this.fetchData()
+                setInterval(this.fetchData, 1000)
+            },
+            beforeDestroy() {
+                clearInterval(this.fetchData)
+            }
+        })
+        
+    </script>
+</body>
+</html>
